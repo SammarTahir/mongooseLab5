@@ -45,6 +45,9 @@ app.post('/api/posts', function (req, res) {
         title: req.body.title,
         content: req.body.content
     })
+
+    // adding this text will close server (stopping double posts)
+    res.send('Item added');
 })
 
 app.get('/api/posts', function (req, res) {
@@ -57,8 +60,13 @@ app.get('/api/posts', function (req, res) {
 
 })
 
-app.delete('/api/posts/:id', function(req, res){
+app.delete('/api/posts/:id', function (req, res) {
     console.log(req.params.id);
+
+    PostModel.deleteOne({ _id: req.params.id },
+        function (err, data) {
+            res.send(data);
+        })
 })
 
 var server = app.listen(8081, function () {
